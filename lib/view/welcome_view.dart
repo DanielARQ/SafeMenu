@@ -21,6 +21,7 @@ class WelcomeView extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
 
+                  // Mantengo el 9:41 como referencia estética de la hora
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Align(
@@ -90,7 +91,7 @@ class WelcomeView extends StatelessWidget {
                   const SizedBox(height: 18),
 
                   const Text(
-                    "Eat safely,\neverywhere.",
+                    "Come seguro,\nen cualquier lugar.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: dark,
@@ -105,7 +106,7 @@ class WelcomeView extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      "Scan menus. Detect allergens.\nDine with confidence.",
+                      "Escanea menús. Detecta alérgenos.\nCome con confianza.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: subtitle,
@@ -147,7 +148,7 @@ class WelcomeView extends StatelessWidget {
                             },
                             icon: const Icon(Icons.login),
                             label: const Text(
-                              "Login",
+                              "Iniciar Sesión",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -173,7 +174,7 @@ class WelcomeView extends StatelessWidget {
                               Navigator.pushNamed(context, '/register');
                             },
                             child: const Text(
-                              "Create Account",
+                              "Crear Cuenta",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
