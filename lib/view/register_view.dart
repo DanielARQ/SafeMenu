@@ -120,7 +120,7 @@ class _RegisterViewState extends State<RegisterView> {
                   const Expanded(
                     child: Center(
                       child: Text(
-                        "Create Account",
+                        "Crear Cuenta",
                         style: TextStyle(
                           color: dark,
                           fontSize: 18,
@@ -152,7 +152,7 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 26),
 
               const Text(
-                "Start dining safely",
+                "Come con seguridad",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: dark,
@@ -165,7 +165,7 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 12),
 
               const Text(
-                "Join SafeMenu to scan menus and detect\nallergens in real-time.",
+                "Únete a SafeMenu para escanear menús y\ndetectar alérgenos en tiempo real.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: subtitle,
@@ -177,32 +177,32 @@ class _RegisterViewState extends State<RegisterView> {
 
               const SizedBox(height: 30),
 
-              _buildLabel("Full Name"),
+              _buildLabel("Nombre Completo"),
               const SizedBox(height: 10),
               _buildField(
                 controller: _nameController,
-                hint: "e.g. John Doe",
+                hint: "ej. Juan Pérez",
                 icon: Icons.person_outline,
               ),
 
               const SizedBox(height: 20),
 
-              _buildLabel("Email Address"),
+              _buildLabel("Correo Electrónico"),
               const SizedBox(height: 10),
               _buildField(
                 controller: _emailController,
-                hint: "name@example.com",
+                hint: "nombre@ejemplo.com",
                 icon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
 
               const SizedBox(height: 20),
 
-              _buildLabel("Password"),
+              _buildLabel("Contraseña"),
               const SizedBox(height: 10),
               _buildPasswordField(
                 controller: _passwordController,
-                hint: "Minimum 8 characters",
+                hint: "Mínimo 8 caracteres",
                 obscure: _obscurePassword,
                 onToggle: () {
                   setState(() => _obscurePassword = !_obscurePassword);
@@ -211,11 +211,11 @@ class _RegisterViewState extends State<RegisterView> {
 
               const SizedBox(height: 20),
 
-              _buildLabel("Confirm Password"),
+              _buildLabel("Confirmar Contraseña"),
               const SizedBox(height: 10),
               _buildPasswordField(
                 controller: _confirmController,
-                hint: "Repeat your password",
+                hint: "Repite tu contraseña",
                 obscure: _obscureConfirm,
                 onToggle: () {
                   setState(() => _obscureConfirm = !_obscureConfirm);
@@ -240,7 +240,7 @@ class _RegisterViewState extends State<RegisterView> {
                       padding: EdgeInsets.only(top: 11),
                       child: Text.rich(
                         TextSpan(
-                          text: "By registering, you agree to our ",
+                          text: "Al registrarte, aceptas nuestros ",
                           style: TextStyle(
                             color: subtitle,
                             fontSize: 15,
@@ -248,15 +248,15 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                           children: [
                             TextSpan(
-                              text: "Terms of Service",
+                              text: "Términos de Servicio",
                               style: TextStyle(
                                 color: green,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            TextSpan(text: " and "),
+                            TextSpan(text: " y nuestra "),
                             TextSpan(
-                              text: "Privacy Policy",
+                              text: "Política de Privacidad",
                               style: TextStyle(
                                 color: green,
                                 fontWeight: FontWeight.w600,
@@ -290,7 +290,7 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         onPressed: _acceptTerms ? _handleSignUp : null,
                         child: const Text(
-                          "Register",
+                          "Registrarse",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
@@ -307,7 +307,7 @@ class _RegisterViewState extends State<RegisterView> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14),
                     child: Text(
-                      "Or sign up with",
+                      "O regístrate con",
                       style: TextStyle(
                         color: subtitle,
                         fontSize: 15,
@@ -355,7 +355,7 @@ class _RegisterViewState extends State<RegisterView> {
                 onTap: () => Navigator.pushReplacementNamed(context, '/login'),
                 child: RichText(
                   text: const TextSpan(
-                    text: "Already have an account? ",
+                    text: "¿Ya tienes una cuenta? ",
                     style: TextStyle(
                       color: subtitle,
                       fontSize: 16,
@@ -363,7 +363,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     children: [
                       TextSpan(
-                        text: "Log in",
+                        text: "Inicia sesión",
                         style: TextStyle(
                           color: green,
                           fontWeight: FontWeight.w800,
