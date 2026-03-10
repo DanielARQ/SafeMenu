@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:safemenu/view/welcome_view.dart';
 
 import 'firebase_options.dart';
 
@@ -20,9 +21,7 @@ import 'package:safemenu/view/settings_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final prefs = UserPrefs();
   await prefs.initPrefs();
@@ -38,8 +37,9 @@ class SafeMenuApp extends StatelessWidget {
     return MaterialApp(
       title: 'SafeMenu',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/welcome',
       routes: {
+        '/welcome': (context) => const WelcomeView(),
         '/': (context) => const SplashView(),
         '/onboarding': (context) => const OnboardingView(),
         '/login': (context) => const LoginView(),
@@ -55,6 +55,7 @@ class SafeMenuApp extends StatelessWidget {
     );
   }
 }
+
 /**
  * const SafeMenuApp({super.key});
 
