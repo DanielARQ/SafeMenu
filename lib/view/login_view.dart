@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controller/login_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -85,9 +86,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -189,7 +188,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   Text(
-                    "¿Olvidaste tu contraseña?",
+                    "¿Olvido su contraseña?",
                     style: TextStyle(
                       color: green,
                       fontSize: 14,
@@ -331,10 +330,7 @@ class _LoginViewState extends State<LoginView> {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(
-            color: Color(0xFF6F7C92),
-            fontSize: 16,
-          ),
+          hintStyle: const TextStyle(color: Color(0xFF6F7C92), fontSize: 16),
           prefixIcon: Icon(icon, color: fieldIcon),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 22),
@@ -355,17 +351,16 @@ class _LoginViewState extends State<LoginView> {
         obscureText: _obscurePassword,
         decoration: InputDecoration(
           hintText: "Ingresa tu contraseña",
-          hintStyle: const TextStyle(
-            color: Color(0xFF6F7C92),
-            fontSize: 16,
-          ),
+          hintStyle: const TextStyle(color: Color(0xFF6F7C92), fontSize: 16),
           prefixIcon: const Icon(Icons.lock_outline, color: fieldIcon),
           suffixIcon: IconButton(
             onPressed: () {
               setState(() => _obscurePassword = !_obscurePassword);
             },
             icon: Icon(
-              _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+              _obscurePassword
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
               color: fieldIcon,
             ),
           ),
@@ -374,5 +369,43 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleForgotPassword() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showError("Escribe tu correo primero para recuperar la contraseña.");
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Te enviamos un correo para restablecer tu contraseña a $email",
+          ),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+
+      String message = "No se pudo enviar el correo.";
+
+      if (e.code == 'user-not-found') {
+        message = "No existe una cuenta con ese correo.";
+      } else if (e.code == 'invalid-email') {
+        message = "El correo no tiene un formato válido.";
+      }
+
+      _showError(message);
+    } catch (e) {
+      if (!mounted) return;
+      _showError("Error al enviar el correo: ${e.toString()}");
+    }
   }
 }
