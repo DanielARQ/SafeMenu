@@ -40,16 +40,23 @@ class SafeMenuApp extends StatelessWidget {
       initialRoute: '/welcome',
       routes: {
         '/welcome': (context) => const WelcomeView(),
-        '/': (context) => const SplashView(),
-        '/onboarding': (context) => const OnboardingView(),
+
         '/login': (context) => const LoginView(),
+
         '/register': (context) => const RegisterView(),
+
         '/home': (context) => const MainWrapper(),
+
         '/setup': (context) => const AllergySetupView(),
+
         '/camera': (context) => const CameraView(),
+
         '/results': (context) => const ScanResultsView(),
+
         '/detail': (context) => const DetailView(),
+
         '/profile': (context) => const SettingsView(),
+
         '/history': (context) => const HistoryView(),
       },
     );
