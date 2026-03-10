@@ -178,8 +178,8 @@ class _LoginViewState extends State<LoginView> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     "Contraseña",
                     style: TextStyle(
                       color: dark,
@@ -187,12 +187,15 @@ class _LoginViewState extends State<LoginView> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Text(
-                    "¿Olvido su contraseña?",
-                    style: TextStyle(
-                      color: green,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                  GestureDetector(
+                    onTap: _handleForgotPassword,
+                    child: const Text(
+                      "¿Olvidó su contraseña ?",
+                      style: TextStyle(
+                        color: green,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ],
