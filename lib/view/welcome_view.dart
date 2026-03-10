@@ -1,16 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:safemenu/service/user_service.dart';
 
-class WelcomeView extends StatelessWidget {
+class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    const Color green = Color(0xFF4CAF50);
-    const Color dark = Color(0xFF0B1533);
-    const Color subtitle = Color(0xFF5E6F8D);
-    const Color lightBg = Color(0xFFF6F7F5);
-    const Color paleGreen = Color(0xFFEAF3EA);
+  State<WelcomeView> createState() => _WelcomeViewState();
+}
 
+class _WelcomeViewState extends State<WelcomeView> {
+  final UserService _userService = UserService();
+
+  static const Color green = Color(0xFF4CAF50);
+  static const Color dark = Color(0xFF0B1533);
+  static const Color subtitle = Color(0xFF5E6F8D);
+  static const Color lightBg = Color(0xFFF6F7F5);
+  static const Color paleGreen = Color(0xFFEAF3EA);
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSession();
+  }
+
+  Future<void> _checkSession() async {
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+
+    if (firebaseUser == null) return;
+
+    try {
+      final userProfile = await _userService.getUserProfile(firebaseUser.uid);
+
+      if (!mounted) return;
+
+      if (userProfile == null || userProfile.allergies.isEmpty) {
+        Navigator.pushReplacementNamed(context, '/setup');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (_) {
+      // Si falla algo, simplemente se queda en WelcomeView
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: lightBg,
       body: SafeArea(
@@ -19,26 +54,7 @@ class WelcomeView extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  const SizedBox(height: 30),
-
-                  // Mantengo el 9:41 como referencia estética de la hora
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "9:41",
-                        style: TextStyle(
-                          color: dark,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
+                  const SizedBox(height: 50),
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -76,9 +92,7 @@ class WelcomeView extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 50),
-
                   const Text(
                     "SafeMenu",
                     style: TextStyle(
@@ -87,11 +101,9 @@ class WelcomeView extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-
                   const SizedBox(height: 18),
-
                   const Text(
-                    "Come seguro,\nen cualquier lugar.",
+                    "Eat safely,\neverywhere.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: dark,
@@ -100,13 +112,11 @@ class WelcomeView extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      "Escanea menús. Detecta alérgenos.\nCome con confianza.",
+                      "Scan menus. Detect allergens.\nDine with confidence.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: subtitle,
@@ -116,18 +126,11 @@ class WelcomeView extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const Spacer(),
-
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFEAF3EA),
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(0),
-                      ),
-                    ),
+                    color: const Color(0xFFEAF3EA),
                     child: Column(
                       children: [
                         SizedBox(
@@ -137,8 +140,6 @@ class WelcomeView extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: green,
                               foregroundColor: Colors.white,
-                              elevation: 6,
-                              shadowColor: green.withOpacity(0.25),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
@@ -148,7 +149,7 @@ class WelcomeView extends StatelessWidget {
                             },
                             icon: const Icon(Icons.login),
                             label: const Text(
-                              "Iniciar Sesión",
+                              "Login",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -156,9 +157,7 @@ class WelcomeView extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 18),
-
                         SizedBox(
                           width: double.infinity,
                           height: 62,
@@ -174,7 +173,7 @@ class WelcomeView extends StatelessWidget {
                               Navigator.pushNamed(context, '/register');
                             },
                             child: const Text(
-                              "Crear Cuenta",
+                              "Create Account",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
