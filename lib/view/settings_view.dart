@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safemenu/service/user_prefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -226,8 +227,17 @@ class _SettingsViewState extends State<SettingsView> {
                     "Cerrar Sesión",
                     null,
                     Colors.red,
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/login');
+                    onTap: () async {
+                      await GoogleSignIn().signOut();
+                      await FirebaseAuth.instance.signOut();
+
+                      if (!mounted) return;
+
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/welcome',
+                        (route) => false,
+                      );
                     },
                   ),
                 ],
