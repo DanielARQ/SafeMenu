@@ -50,7 +50,7 @@ class _RegisterViewState extends State<RegisterView> {
       final password = _passwordController.text;
       final confirm = _confirmController.text;
 
-      final ok = await _controller.handleRegister(
+      final message = await _controller.handleRegister(
         name: name,
         email: email,
         password: password,
@@ -59,11 +59,10 @@ class _RegisterViewState extends State<RegisterView> {
 
       if (!mounted) return;
 
-      if (ok) {
-        // Redirige al flujo de inicio (donde se configuran los alérgenos)
+      if (message == null) {
         Navigator.pushReplacementNamed(context, '/startup');
       } else {
-        _showError("No se pudo completar el registro. Revisa los datos.");
+        _showError(message);
       }
     } catch (e) {
       if (!mounted) return;
@@ -101,10 +100,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.redAccent,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
     );
   }
 
@@ -137,7 +133,9 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 48), // Espaciador para centrar el título
+                  const SizedBox(
+                    width: 48,
+                  ), // Espaciador para centrar el título
                 ],
               ),
               const SizedBox(height: 24),
@@ -149,11 +147,7 @@ class _RegisterViewState extends State<RegisterView> {
                   color: const Color(0xFFEAF3EA),
                   borderRadius: BorderRadius.circular(24),
                 ),
-                child: const Icon(
-                  Icons.restaurant,
-                  size: 42,
-                  color: green,
-                ),
+                child: const Icon(Icons.restaurant, size: 42, color: green),
               ),
               const SizedBox(height: 26),
               const Text(
@@ -281,7 +275,9 @@ class _RegisterViewState extends State<RegisterView> {
                 width: double.infinity,
                 height: 60,
                 child: _isLoading
-                    ? const Center(child: CircularProgressIndicator(color: green))
+                    ? const Center(
+                        child: CircularProgressIndicator(color: green),
+                      )
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: green,
@@ -346,10 +342,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   label: const Text(
                     "Google",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
@@ -417,10 +410,7 @@ class _RegisterViewState extends State<RegisterView> {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(
-            color: Color(0xFF6F7C92),
-            fontSize: 16,
-          ),
+          hintStyle: const TextStyle(color: Color(0xFF6F7C92), fontSize: 16),
           prefixIcon: Icon(icon, color: fieldIcon),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 22),
@@ -446,15 +436,14 @@ class _RegisterViewState extends State<RegisterView> {
         obscureText: obscure,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(
-            color: Color(0xFF6F7C92),
-            fontSize: 16,
-          ),
+          hintStyle: const TextStyle(color: Color(0xFF6F7C92), fontSize: 16),
           prefixIcon: const Icon(Icons.lock_outline, color: fieldIcon),
           suffixIcon: IconButton(
             onPressed: onToggle,
             icon: Icon(
-              obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+              obscure
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
               color: fieldIcon,
             ),
           ),
