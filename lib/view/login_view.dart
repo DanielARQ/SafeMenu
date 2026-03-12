@@ -51,7 +51,7 @@ class _LoginViewState extends State<LoginView> {
       if (!mounted) return;
 
       if (ok) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/startup');
       } else {
         _showError("Correo o contraseña incorrectos.");
       }
@@ -77,7 +77,7 @@ class _LoginViewState extends State<LoginView> {
       if (!mounted) return;
 
       if (ok) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/startup');
       } else {
         _showError("No se pudo iniciar sesión con Google.");
       }
