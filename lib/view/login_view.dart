@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../controller/login_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -10,6 +10,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final LoginController _loginController = LoginController();
@@ -31,10 +32,12 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
+  // LOGIN NORMAL
   Future<void> _handleEmailLogin() async {
     setState(() => _isLoading = true);
 
     try {
+
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
@@ -48,67 +51,121 @@ class _LoginViewState extends State<LoginView> {
       if (!mounted) return;
 
       if (ok) {
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
         _showError("Correo o contraseña incorrectos.");
       }
+
     } catch (e) {
-      if (!mounted) return;
       _showError("Error al entrar: ${e.toString()}");
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+    }
+
+    finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
+  // LOGIN GOOGLE
   Future<void> _handleGoogleLogin() async {
+
     setState(() => _isLoading = true);
 
     try {
+
       final ok = await _loginController.signInWithGoogle();
 
       if (!mounted) return;
 
       if (ok) {
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
         _showError("No se pudo iniciar sesión con Google.");
       }
+
     } catch (e) {
-      if (!mounted) return;
       _showError("Error con Google: ${e.toString()}");
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
+    }
+
+    finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  // RECUPERAR CONTRASEÑA
+  Future<void> _handleForgotPassword() async {
+
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showError("Escribe tu correo primero para recuperar tu contraseña.");
+      return;
+    }
+
+    try {
+
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Te enviamos un correo para recuperar tu contraseña."),
+        ),
+      );
+
+    } on FirebaseAuthException catch (e) {
+
+      String message = "No se pudo enviar el correo.";
+
+      if (e.code == 'user-not-found') {
+        message = "No existe una cuenta con ese correo.";
       }
+
+      if (e.code == 'invalid-email') {
+        message = "El correo no tiene formato válido.";
+      }
+
+      _showError(message);
+
+    } catch (e) {
+      _showError("Error: ${e.toString()}");
     }
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
       backgroundColor: bg,
+
       body: SafeArea(
+
         child: SingleChildScrollView(
+
           padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back_ios_new, color: dark),
               ),
 
-              const SizedBox(height: 6),
+              const SizedBox(height: 10),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+
                   Container(
                     width: 56,
                     height: 56,
@@ -122,7 +179,9 @@ class _LoginViewState extends State<LoginView> {
                       size: 28,
                     ),
                   ),
+
                   const SizedBox(width: 12),
+
                   const Text(
                     "SafeMenu",
                     style: TextStyle(
@@ -134,10 +193,10 @@ class _LoginViewState extends State<LoginView> {
                 ],
               ),
 
-              const SizedBox(height: 34),
+              const SizedBox(height: 40),
 
               const Text(
-                "Bienvenido",
+                "Welcome Back",
                 style: TextStyle(
                   color: dark,
                   fontSize: 34,
@@ -148,7 +207,7 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: 8),
 
               const Text(
-                "Inicia sesión para escanear con seguridad.",
+                "Log in to scan safely.",
                 style: TextStyle(
                   color: subtitle,
                   fontSize: 18,
@@ -156,41 +215,45 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
 
-              const SizedBox(height: 34),
+              const SizedBox(height: 30),
 
               const Text(
-                "Correo Electrónico",
+                "Email Address",
                 style: TextStyle(
                   color: dark,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 12),
+
+              const SizedBox(height: 10),
+
               _buildField(
                 controller: _emailController,
-                hint: "nombre@ejemplo.com",
+                hint: "name@example.com",
                 icon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+
                   const Text(
-                    "Contraseña",
+                    "Password",
                     style: TextStyle(
                       color: dark,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+
                   GestureDetector(
                     onTap: _handleForgotPassword,
                     child: const Text(
-                      "¿Olvidó su contraseña ?",
+                      "Forgot password?",
                       style: TextStyle(
                         color: green,
                         fontSize: 14,
@@ -200,10 +263,12 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+
+              const SizedBox(height: 10),
+
               _buildPasswordField(),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 30),
 
               SizedBox(
                 width: double.infinity,
@@ -214,15 +279,14 @@ class _LoginViewState extends State<LoginView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: green,
                           foregroundColor: Colors.white,
-                          elevation: 8,
-                          shadowColor: green.withOpacity(0.25),
+                          elevation: 6,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
                         onPressed: _handleEmailLogin,
                         child: const Text(
-                          "Entrar",
+                          "Login",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
@@ -231,15 +295,17 @@ class _LoginViewState extends State<LoginView> {
                       ),
               ),
 
-              const SizedBox(height: 34),
+              const SizedBox(height: 30),
 
               Row(
                 children: const [
+
                   Expanded(child: Divider(color: fieldBorder)),
+
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14),
                     child: Text(
-                      "O continúa con",
+                      "Or continue with",
                       style: TextStyle(
                         color: subtitle,
                         fontSize: 15,
@@ -247,11 +313,12 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                   ),
+
                   Expanded(child: Divider(color: fieldBorder)),
                 ],
               ),
 
-              const SizedBox(height: 26),
+              const SizedBox(height: 25),
 
               Center(
                 child: SizedBox(
@@ -290,7 +357,7 @@ class _LoginViewState extends State<LoginView> {
                   onTap: () => Navigator.pushNamed(context, '/register'),
                   child: RichText(
                     text: const TextSpan(
-                      text: "¿No tienes una cuenta? ",
+                      text: "Don't have an account? ",
                       style: TextStyle(
                         color: subtitle,
                         fontSize: 16,
@@ -298,7 +365,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       children: [
                         TextSpan(
-                          text: "Regístrate",
+                          text: "Sign Up",
                           style: TextStyle(
                             color: green,
                             fontWeight: FontWeight.w800,
@@ -333,7 +400,6 @@ class _LoginViewState extends State<LoginView> {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(color: Color(0xFF6F7C92), fontSize: 16),
           prefixIcon: Icon(icon, color: fieldIcon),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 22),
@@ -353,62 +419,25 @@ class _LoginViewState extends State<LoginView> {
         controller: _passwordController,
         obscureText: _obscurePassword,
         decoration: InputDecoration(
-          hintText: "Ingresa tu contraseña",
-          hintStyle: const TextStyle(color: Color(0xFF6F7C92), fontSize: 16),
+          hintText: "Enter your password",
           prefixIcon: const Icon(Icons.lock_outline, color: fieldIcon),
           suffixIcon: IconButton(
-            onPressed: () {
-              setState(() => _obscurePassword = !_obscurePassword);
-            },
             icon: Icon(
               _obscurePassword
                   ? Icons.visibility_outlined
                   : Icons.visibility_off_outlined,
               color: fieldIcon,
             ),
+            onPressed: () {
+              setState(() {
+                _obscurePassword = !_obscurePassword;
+              });
+            },
           ),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 22),
         ),
       ),
     );
-  }
-
-  Future<void> _handleForgotPassword() async {
-    final email = _emailController.text.trim();
-
-    if (email.isEmpty) {
-      _showError("Escribe tu correo primero para recuperar la contraseña.");
-      return;
-    }
-
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Te enviamos un correo para restablecer tu contraseña a $email",
-          ),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (!mounted) return;
-
-      String message = "No se pudo enviar el correo.";
-
-      if (e.code == 'user-not-found') {
-        message = "No existe una cuenta con ese correo.";
-      } else if (e.code == 'invalid-email') {
-        message = "El correo no tiene un formato válido.";
-      }
-
-      _showError(message);
-    } catch (e) {
-      if (!mounted) return;
-      _showError("Error al enviar el correo: ${e.toString()}");
-    }
   }
 }
