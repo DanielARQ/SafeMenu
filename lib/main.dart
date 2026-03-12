@@ -33,7 +33,7 @@ class SafeMenuApp extends StatelessWidget {
     return MaterialApp(
       title: 'SafeMenu',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/welcome',
+      initialRoute: '/startup',
       routes: {
         '/startup': (context) => const StartupView(),
 
