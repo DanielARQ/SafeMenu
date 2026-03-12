@@ -16,21 +16,21 @@ class _AllergySetupViewState extends State<AllergySetupView> {
   final UserService _userService = UserService();
 
   Future<void> _handleSaveProfile() async {
-
-    // 🔹 OBTENEMOS EL USUARIO REAL DESDE FIREBASE
     final firebaseUser = FirebaseAuth.instance.currentUser;
 
     if (firebaseUser != null) {
+      // Recuperamos el perfil actual para no perder el nombre real
+      final existingProfile = await _userService.getUserProfile(
+        firebaseUser.uid,
+      );
 
-      // Creamos el modelo actualizado
       UserModel updatedUser = UserModel(
         id: firebaseUser.uid,
-        fullName: firebaseUser.displayName ?? "Usuario SafeMenu",
-        email: firebaseUser.email ?? "",
+        fullName: existingProfile?.fullName ?? "Usuario SafeMenu",
+        email: firebaseUser.email ?? existingProfile?.email ?? "",
         allergies: _controller.selectedAllergies.map((a) => a.nombre).toList(),
       );
 
-      // Guardamos en Firestore + SharedPreferences
       await _userService.saveUserProfile(updatedUser);
 
       if (mounted) {
@@ -40,12 +40,8 @@ class _AllergySetupViewState extends State<AllergySetupView> {
 
         Navigator.pushReplacementNamed(context, '/home');
       }
-
     } else {
-
-      // Si no hay sesión, regresamos al login
       Navigator.pushReplacementNamed(context, '/login');
-
     }
   }
 
@@ -61,7 +57,6 @@ class _AllergySetupViewState extends State<AllergySetupView> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
             child: Text(
@@ -95,7 +90,6 @@ class _AllergySetupViewState extends State<AllergySetupView> {
               ),
               itemCount: _controller.allAllergies.length,
               itemBuilder: (context, index) {
-
                 final allergy = _controller.allAllergies[index];
 
                 return GestureDetector(
@@ -122,12 +116,10 @@ class _AllergySetupViewState extends State<AllergySetupView> {
 
                     child: Stack(
                       children: [
-
                         Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: const BoxDecoration(
@@ -150,7 +142,6 @@ class _AllergySetupViewState extends State<AllergySetupView> {
                                   fontSize: 16,
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -165,7 +156,6 @@ class _AllergySetupViewState extends State<AllergySetupView> {
                               size: 22,
                             ),
                           ),
-
                       ],
                     ),
                   ),
@@ -192,11 +182,9 @@ class _AllergySetupViewState extends State<AllergySetupView> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       Text(
                         "${_controller.selectedAllergies.length} seleccionadas",
                         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -216,7 +204,6 @@ class _AllergySetupViewState extends State<AllergySetupView> {
                           ),
                         ),
                       ),
-
                     ],
                   ),
 
@@ -243,7 +230,6 @@ class _AllergySetupViewState extends State<AllergySetupView> {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
