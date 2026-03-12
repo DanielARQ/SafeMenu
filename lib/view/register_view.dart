@@ -58,7 +58,7 @@ class _RegisterViewState extends State<RegisterView> {
       if (!mounted) return;
 
       if (ok) {
-        Navigator.pushReplacementNamed(context, '/setup');
+        Navigator.pushReplacementNamed(context, '/startup');
       } else {
         _showError("No se pudo completar el registro. Revisa los datos.");
       }

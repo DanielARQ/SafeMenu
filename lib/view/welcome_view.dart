@@ -35,9 +35,9 @@ class _WelcomeViewState extends State<WelcomeView> {
       if (!mounted) return;
 
       if (userProfile == null || userProfile.allergies.isEmpty) {
-        Navigator.pushReplacementNamed(context, '/setup');
+        Navigator.pushReplacementNamed(context, '/login');
       } else {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/register');
       }
     } catch (_) {
       // Si falla algo, simplemente se queda en WelcomeView
