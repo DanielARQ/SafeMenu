@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:safemenu/view/startup_view.dart';
 import 'package:safemenu/view/welcome_view.dart';
 import 'firebase_options.dart';
 import 'package:safemenu/service/user_prefs.dart';
@@ -34,6 +35,8 @@ class SafeMenuApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/welcome',
       routes: {
+        '/startup': (context) => const StartupView(),
+
         '/welcome': (context) => const WelcomeView(),
 
         '/login': (context) => const LoginView(),
