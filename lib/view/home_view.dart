@@ -130,43 +130,39 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildHeader() {
-  final String initial =
-      _userName.isNotEmpty ? _userName.trim()[0].toUpperCase() : "U";
+    final String initial = _userName.isNotEmpty
+        ? _userName.trim()[0].toUpperCase()
+        : "U";
 
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Bienvenido,",
-            style: TextStyle(color: Colors.grey),
-          ),
-          Text(
-            "¡Hola, $_userName!",
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Bienvenido,", style: TextStyle(color: Colors.grey)),
+            Text(
+              "¡Hola, $_userName!",
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        CircleAvatar(
+          radius: 24,
+          backgroundColor: const Color(0xFFE8F5E9),
+          child: Text(
+            initial,
             style: const TextStyle(
-              fontSize: 22,
+              color: Color(0xFF4CAF50),
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-        ],
-      ),
-      CircleAvatar(
-        radius: 24,
-        backgroundColor: const Color(0xFFE8F5E9),
-        child: Text(
-          initial,
-          style: const TextStyle(
-            color: Color(0xFF4CAF50),
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
+
   Widget _buildMainScanCard(BuildContext context) {
     return Container(
       width: double.infinity,
