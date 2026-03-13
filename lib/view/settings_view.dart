@@ -12,7 +12,7 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  final prefs = UserPrefs(); // Acceso a los datos guardados
+  final prefs = UserPrefs();
   late bool _isNotifActive;
 
   @override
@@ -23,10 +23,13 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    // Obtenemos los datos actuales persistidos
     String userName = prefs.name.isEmpty ? "Usuario" : prefs.name;
-    String userEmail = prefs.email.isEmpty ? "correo@ejemplo.com" : prefs.email;
+    String userEmail =
+        prefs.email.isEmpty ? "correo@ejemplo.com" : prefs.email;
     List<String> myAllergies = prefs.allergies;
+
+    final String initial =
+        userName.isNotEmpty ? userName.trim()[0].toUpperCase() : "U";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
@@ -50,7 +53,6 @@ class _SettingsViewState extends State<SettingsView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // --- CABECERA DE PERFIL ---
             Container(
               color: Colors.white,
               width: double.infinity,
@@ -60,13 +62,26 @@ class _SettingsViewState extends State<SettingsView> {
                   Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      CircleAvatar(
-                        radius: 55,
-                        backgroundColor: Colors.green[50],
-                        child: const Icon(
-                          Icons.person,
-                          size: 65,
-                          color: Colors.green,
+                      Container(
+                        width: 110,
+                        height: 110,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0xFFE8F5E9),
+                          border: Border.all(
+                            color: const Color(0xFF4CAF50).withOpacity(0.25),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            initial,
+                            style: const TextStyle(
+                              fontSize: 42,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF4CAF50),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
@@ -122,12 +137,11 @@ class _SettingsViewState extends State<SettingsView> {
 
             const SizedBox(height: 20),
 
-            // --- SECCIÓN: MIS ALERGIAS ---
             _buildSectionHeader("MIS ALERGIAS", Icons.add, () async {
-              // Al regresar de la pantalla de setup, refrescamos la vista
               await Navigator.pushNamed(context, '/setup');
               setState(() {});
             }),
+
             Container(
               width: double.infinity,
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -158,8 +172,8 @@ class _SettingsViewState extends State<SettingsView> {
 
             const SizedBox(height: 25),
 
-            // --- SECCIÓN: CONFIGURACIÓN ---
             _buildSectionHeader("CONFIGURACIÓN", null, null),
+
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -178,18 +192,13 @@ class _SettingsViewState extends State<SettingsView> {
                     Icons.notifications_none_rounded,
                     "Notificaciones",
                     _isNotifActive ? "Activado" : "Desactivado",
-                    _isNotifActive
-                        ? Colors.green
-                        : Colors.grey, // El icono cambia de color
+                    _isNotifActive ? Colors.green : Colors.grey,
                     onTap: () {
                       setState(() {
-                        _isNotifActive =
-                            !_isNotifActive; // Cambiamos el estado visual
-                        prefs.notificationsEnabled =
-                            _isNotifActive; // Guardamos en memoria
+                        _isNotifActive = !_isNotifActive;
+                        prefs.notificationsEnabled = _isNotifActive;
                       });
 
-                      // Feedback rápido al usuario
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -198,9 +207,8 @@ class _SettingsViewState extends State<SettingsView> {
                                 : "Notificaciones silenciadas",
                           ),
                           duration: const Duration(milliseconds: 500),
-                          backgroundColor: _isNotifActive
-                              ? Colors.green
-                              : Colors.grey,
+                          backgroundColor:
+                              _isNotifActive ? Colors.green : Colors.grey,
                         ),
                       );
                     },
@@ -286,12 +294,10 @@ class _SettingsViewState extends State<SettingsView> {
   Widget _buildAllergyChip(String label) {
     return GestureDetector(
       onTap: () async {
-        // 1. Obtenemos la lista actual, quitamos la alergia y guardamos
         List<String> currentAllergies = List.from(prefs.allergies);
         currentAllergies.remove(label);
         prefs.allergies = currentAllergies;
 
-        // 2. Refrescamos la pantalla
         setState(() {});
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -401,11 +407,9 @@ class _SettingsViewState extends State<SettingsView> {
           ),
           TextButton(
             onPressed: () async {
-              // Borramos todo en SharedPreferences
               final prefs = await SharedPreferences.getInstance();
               await prefs.clear();
 
-              // Enviamos al login y cerramos todo
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 '/login',
@@ -437,7 +441,6 @@ class _SettingsViewState extends State<SettingsView> {
           ),
           TextButton(
             onPressed: () async {
-              // Firebase envía el correo automáticamente
               await FirebaseAuth.instance.sendPasswordResetEmail(
                 email: prefs.email,
               );
