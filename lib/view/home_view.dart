@@ -147,15 +147,25 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-        CircleAvatar(
-          radius: 24,
-          backgroundColor: const Color(0xFFE8F5E9),
-          child: Text(
-            initial,
-            style: const TextStyle(
-              color: Color(0xFF4CAF50),
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: const Color(0xFFE8F5E9),
+            border: Border.all(
+              color: const Color(0xFF4CAF50).withOpacity(0.25),
+              width: 1.5,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              initial,
+              style: const TextStyle(
+                color: Color(0xFF4CAF50),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
